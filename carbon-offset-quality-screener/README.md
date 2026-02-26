@@ -31,7 +31,7 @@ This toolkit pulls data directly from the **Verra VCS Registry** and scores each
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/carbon-offset-quality-screener.git
+git clone https://github.com/Caro-rawr/carbon-offset-quality-screener.git
 cd carbon-offset-quality-screener
 pip install -r requirements.txt
 ```
@@ -80,5 +80,5 @@ carbon-offset-quality-screener/
 
 ## Author
 
-Carolina Cruz Núñez | M.Sc. Sustainability Sciences, UNAM  
+Carolina Cruz Núñez | M.Sc. Sustainability Sciences 
 [linkedin.com/in/carostrepto](https://linkedin.com/in/carostrepto)
