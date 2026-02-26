@@ -1,0 +1,88 @@
+# scoring_weights.yaml
+# Carbon Offset Quality Screener — Configuration
+# Modify weights (must sum to 1.0) and thresholds as needed.
+
+quality_index:
+  weights:
+    retirement_rate: 0.25          # % of issued credits actually retired
+    vintage_freshness: 0.15        # Recency-weighted average vintage
+    issuance_consistency: 0.15     # Stability of annual issuance cadence
+    buffer_pool_ratio: 0.20        # Buffer contributions as reversal insurance
+    project_longevity: 0.10        # Years of operational track record
+    type_risk_score: 0.10          # Project type risk tier (categorical)
+    verification_diversity: 0.05   # Number of distinct auditors
+
+  # Normalization parameters
+  normalization:
+    retirement_rate:
+      floor: 0.0
+      ceiling: 1.0
+    vintage_freshness:
+      reference_year: 2024         # credits issued in this year score 1.0
+      decay_years: 10              # linear decay over 10 years
+    issuance_consistency:
+      cv_floor: 0.0                # perfect consistency
+      cv_ceiling: 2.0              # maximum expected CV
+    buffer_pool_ratio:
+      optimal_min: 0.10            # minimum desirable buffer ratio
+      optimal_max: 0.20            # above this may signal excess uncertainty
+    project_longevity:
+      min_years: 0
+      max_years: 15                # log-plateau
+    type_risk_score:               # 0=highest risk, 1=lowest risk
+      REDD+: 0.30
+      IFM: 0.50                    # Improved Forest Management
+      ARR: 0.60                    # Afforestation/Reforestation/Revegetation
+      ALM: 0.55                    # Agricultural Land Management
+      WRC: 0.55                    # Wetland Restoration & Conservation
+      Renewable Energy: 0.85
+      Methane Capture: 0.80
+      Energy Efficiency: 0.82
+      Industrial: 0.90
+      Unknown: 0.40
+    verification_diversity:
+      max_expected: 4              # reference for normalization
+
+# Red flag thresholds
+red_flags:
+  orphaned_vintage:
+    max_vintage_age_years: 5       # vintages older than this...
+    min_retirement_rate: 0.10      # ...with less than 10% retirement → flag
+  buffer_breach:
+    floor_by_type:
+      REDD+: 0.10
+      IFM: 0.08
+      ARR: 0.08
+      ALM: 0.08
+      WRC: 0.08
+      Renewable Energy: 0.05
+      Methane Capture: 0.05
+      Energy Efficiency: 0.05
+      Industrial: 0.05
+      Unknown: 0.10
+  low_demand:
+    min_project_age_years: 3
+    min_retirement_rate: 0.20
+  audit_concentration:
+    max_single_auditor_share: 1.0  # 1.0 = single auditor in 100% of events
+  issuance_spike:
+    max_single_year_share: 0.60
+  stale_project:
+    max_months_since_last_issuance: 24
+
+# Output settings
+output:
+  score_bins:
+    - label: "High Quality"
+      min: 70
+      max: 100
+      color: "#2e7d32"
+    - label: "Medium Quality"
+      min: 45
+      max: 70
+      color: "#f9a825"
+    - label: "Low Quality"
+      min: 0
+      max: 45
+      color: "#c62828"
+  report_top_n: 20                 # projects to highlight in HTML report
